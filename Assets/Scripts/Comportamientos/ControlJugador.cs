@@ -25,6 +25,11 @@ namespace UCM.IAV.Movimiento
         //float tiempoGiroSuave = 0.1f;
         //float velocidadGiroSuave;
 
+        [SerializeField]
+        private int maxAcel;
+        [SerializeField]
+        private int minAcel;
+
         public override Direccion GetDireccion()
         {
             Direccion direccion = new Direccion();
@@ -63,6 +68,16 @@ namespace UCM.IAV.Movimiento
             // Podr�amos meter una rotaci�n autom�tica en la direcci�n del movimiento, si quisi�ramos
 
             return direccion;
+        }
+
+        public void Correr()
+        {
+            agente.aceleracionMax = maxAcel;
+        }
+
+        public void Andar()
+        {
+            agente.aceleracionMax = minAcel;
         }
     }
 }

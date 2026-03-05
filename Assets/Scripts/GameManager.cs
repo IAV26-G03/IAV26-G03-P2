@@ -2,7 +2,7 @@
    Copyright (C) 2020-2023 Federico Peinado
    http://www.federicopeinado.com
    Este fichero forma parte del material de la asignatura Inteligencia Artificial para Videojuegos.
-   Esta asignatura se imparte en la Facultad de Informática de la Universidad Complutense de Madrid (España).
+   Esta asignatura se imparte en la Facultad de Informï¿½tica de la Universidad Complutense de Madrid (Espaï¿½a).
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
@@ -20,6 +20,9 @@ namespace UCM.IAV.Movimiento
     public class GameManager : MonoBehaviour
     {
         public static GameManager instance = null;
+
+        [SerializeField]
+        private ControlJugador controljg;
 
         // Textos UI
         Text fRText;
@@ -50,7 +53,7 @@ namespace UCM.IAV.Movimiento
 
         private void Awake()
         {
-            // Hacemos que el gestor del juego sea un Ejemplar Único
+            // Hacemos que el gestor del juego sea un Ejemplar ï¿½nico
             if (instance == null)
             {
                 instance = this;
@@ -80,7 +83,7 @@ namespace UCM.IAV.Movimiento
         }
 
         // Delegado para hacer cosas cuando una escena termina de cargar (no necesariamente cuando ha cambiado/switched)
-        // Antiguamente se usaba un método del SceneManager llamado OnLevelWasLoaded(int level), ahora obsoleto
+        // Antiguamente se usaba un mï¿½todo del SceneManager llamado OnLevelWasLoaded(int level), ahora obsoleto
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             FindGO();
@@ -125,16 +128,24 @@ namespace UCM.IAV.Movimiento
                 ChangeFrameRate();
             if (Input.GetKeyDown(KeyCode.C))
                 heuristicText.text = theseusGraph.ChangeHeuristic();
+            if(Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                controljg.Correr();
+            }
+            if (Input.GetKeyUp(KeyCode.Mouse0))
+            {
+               controljg.Andar();
+            }
         }
 
         private void FindGO()
         {
-            if (SceneManager.GetActiveScene().name == "Menu") // Nombre de escena que habría que llevar a una constante
+            if (SceneManager.GetActiveScene().name == "Menu") // Nombre de escena que habrï¿½a que llevar a una constante
             {
                 label = GameObject.FindGameObjectWithTag("DDLabel").GetComponent<Text>();
                 label2 = GameObject.FindGameObjectWithTag("MinoLabel").GetComponent<Text>();
             }
-            else if (SceneManager.GetActiveScene().name == "Labyrinth") // Nombre de escena que habría que llevar a una constante
+            else if (SceneManager.GetActiveScene().name == "Labyrinth") // Nombre de escena que habrï¿½a que llevar a una constante
             {
                 fRText = GameObject.FindGameObjectWithTag("Framerate").GetComponent<Text>();
                 heuristicText = GameObject.FindGameObjectWithTag("Heuristic").GetComponent<Text>();
