@@ -1753,7 +1753,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d42afacea3978740b9f9f056e95c8d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minotaur: {fileID: 5856985828648263931, guid: a28f19a75248a0949bb33e20b0a58fcc,
+  minotaurCentinela: {fileID: 5856985828648263931, guid: 36b0e6ee42b689247a48fb54386cf108,
+    type: 3}
+  minotaurMerodeos: {fileID: 5856985828648263931, guid: a28f19a75248a0949bb33e20b0a58fcc,
     type: 3}
   numMinos: 1
 --- !u!4 &1580546821

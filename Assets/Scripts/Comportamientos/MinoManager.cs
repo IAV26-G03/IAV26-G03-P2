@@ -2,7 +2,7 @@
    Copyright (C) 2020-2023 Federico Peinado
    http://www.federicopeinado.com
    Este fichero forma parte del material de la asignatura Inteligencia Artificial para Videojuegos.
-   Esta asignatura se imparte en la Facultad de Informática de la Universidad Complutense de Madrid (España).
+   Esta asignatura se imparte en la Facultad de Informï¿½tica de la Universidad Complutense de Madrid (Espaï¿½a).
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
@@ -16,7 +16,9 @@ namespace UCM.IAV.Navegacion
 
     public class MinoManager : MonoBehaviour
     {
-        public GameObject minotaur;
+        public GameObject minotaurCentinela;
+
+        public GameObject minotaurMerodeos;
 
         private Graph graph;
 
@@ -41,6 +43,8 @@ namespace UCM.IAV.Navegacion
 
         void GenerateMino()
         {
+            int randomNum = Random.Range(0, 2);
+            GameObject minotaur = randomNum == 0 ? minotaurCentinela : minotaurMerodeos;
 
             GameObject minoGO = Instantiate(minotaur, graph.GetRandomPos().transform.position + new Vector3(0, 0.3f, 0), Quaternion.identity);
         }

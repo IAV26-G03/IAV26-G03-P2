@@ -130,11 +130,17 @@ namespace UCM.IAV.Movimiento
                 heuristicText.text = theseusGraph.ChangeHeuristic();
             if(Input.GetKeyDown(KeyCode.Mouse0))
             {
-                controljg.Correr();
+                if(player != null) {
+                    controljg = player.GetComponent<ControlJugador>();
+                    controljg.Correr();
+                }
             }
             if (Input.GetKeyUp(KeyCode.Mouse0))
             {
-               controljg.Andar();
+                if (player != null) {
+                    controljg = player.GetComponent<ControlJugador>();
+                    controljg.Andar();
+                }
             }
         }
 
