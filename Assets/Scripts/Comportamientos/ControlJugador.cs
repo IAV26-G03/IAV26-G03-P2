@@ -2,7 +2,7 @@
    Copyright (C) 2020-2023 Federico Peinado
    http://www.federicopeinado.com
    Este fichero forma parte del material de la asignatura Inteligencia Artificial para Videojuegos.
-   Esta asignatura se imparte en la Facultad de Informática de la Universidad Complutense de Madrid (España).
+   Esta asignatura se imparte en la Facultad de Informï¿½tica de la Universidad Complutense de Madrid (Espaï¿½a).
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
@@ -17,7 +17,7 @@ namespace UCM.IAV.Movimiento
     public class ControlJugador: ComportamientoAgente
     {
         /// <summary>
-        /// Obtiene la dirección
+        /// Obtiene la direcciï¿½n
         /// </summary>
         /// <returns></returns>
         /// 
@@ -29,15 +29,38 @@ namespace UCM.IAV.Movimiento
         {
             Direccion direccion = new Direccion();
             
-            //Direccion actual
-            direccion.lineal.x = Input.GetAxis("Horizontal");
-            direccion.lineal.z = Input.GetAxis("Vertical");
+           Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
 
-            //Resto de cálculo de movimiento
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+            {
+                Vector3 destino = hit.point;
+                destino.y = transform.position.y;
+
+                float distancia = Vector3.Distance(transform.position, destino);
+                float umbralDistancia = 1f;
+
+            
+                if (distancia > umbralDistancia)
+                {
+                 
+                    Vector3 vectorHaciaRaton = destino - transform.position;
+                    vectorHaciaRaton.Normalize();
+
+                    direccion.lineal.x = vectorHaciaRaton.x;
+                    direccion.lineal.z = vectorHaciaRaton.z;
+                }
+                else
+                {
+                    direccion.lineal = Vector3.zero;
+                }
+
+            }
             direccion.lineal.Normalize();
             direccion.lineal *= agente.aceleracionMax;
 
-            // Podríamos meter una rotación automática en la dirección del movimiento, si quisiéramos
+
+            // Podrï¿½amos meter una rotaciï¿½n automï¿½tica en la direcciï¿½n del movimiento, si quisiï¿½ramos
 
             return direccion;
         }
