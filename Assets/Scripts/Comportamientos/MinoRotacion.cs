@@ -13,56 +13,46 @@ using UnityEngine;
 namespace UCM.IAV.Movimiento
 {
     /// <summary>
-    /// Clase para modelar el comportamiento de WANDER a otro agente
+    /// Clase para modelar el comportamiento de rotacion
     /// </summary>
     public class MinoRotacion : ComportamientoAgente
     {
         [SerializeField]
-        float maxTime = 2.0f;
+        float maxTime = 3.0f;
 
         [SerializeField]
         float minTime = 1.0f;
 
-        float t = 3.0f;
+        float t = 0.0f;
         float actualT = 2.0f;
 
-        Direccion lastDir = new Direccion();
+        float anguloDestino;
+        float velocidadGiroSuave;
+
+        void Start()
+        {
+            anguloDestino = transform.eulerAngles.y;
+        }
 
         public override Direccion GetDireccion(){
             if (t >= actualT)
             {
-                Direccion direccion = new Direccion();
-
-                Vector2 dir = Random.insideUnitCircle.normalized;
-
-                direccion.lineal = new Vector3(0, 0, 0);
-
-                direccion.angular = Random.Range(-1f, 1f) * agente.aceleracionMax;
-
-                lastDir = direccion;
-
+                //Escoge un nuevo ángulo de mirada aleatorio
+                anguloDestino = transform.eulerAngles.y + Random.Range(-90f, 90f);
                 actualT = Random.Range(minTime, maxTime);
-
                 t = 0.0f;
-                return lastDir;
             }
             else{
                 t += Time.deltaTime;
-                return new Direccion();
             }
 
-            
-        }
+            //Gira el transform localmente para forzar que el vigía mire a su alrededor de forma visual
+            //sin depender de la fricción del Rigidbody ni de los AddTorque del Agente.
+            float anguloSuave = Mathf.SmoothDampAngle(transform.eulerAngles.y, anguloDestino, ref velocidadGiroSuave, 0.5f);
+            transform.rotation = Quaternion.Euler(0f, anguloSuave, 0f);
 
-        private void OnCollisionEnter(Collision collision)
-        {
-            if(collision.gameObject.layer != 7)
-            {
-                t = 0;
-                lastDir.lineal = transform.position - collision.transform.position;
-                lastDir.lineal.Normalize();
-                lastDir.lineal *= agente.aceleracionMax;
-            }
+            //Devuelve dirección vacía para que Agente no aplique ninguna velocidad.
+            return new Direccion();
         }
     }
 }

@@ -13,7 +13,6 @@ using UnityEngine;
 
 namespace UCM.IAV.Navegacion
 {
-
     public class MinoManager : MonoBehaviour
     {
         public GameObject minotaurCentinela;
@@ -43,10 +42,35 @@ namespace UCM.IAV.Navegacion
 
         void GenerateMino()
         {
-            int randomNum = Random.Range(0, 2);
-            GameObject minotaur = randomNum == 0 ? minotaurCentinela : minotaurMerodeos;
+            bool isPatrullero = Random.Range(0, 2) == 1;
+            GameObject prefabToInstantiate = isPatrullero ? minotaurMerodeos : minotaurCentinela;
 
-            GameObject minoGO = Instantiate(minotaur, graph.GetRandomPos().transform.position + new Vector3(0, 0.3f, 0), Quaternion.identity);
+            Vector3 spawnPos = graph.GetRandomPos().transform.position + new Vector3(0, 0.3f, 0);
+            GameObject minoGO = Instantiate(prefabToInstantiate, spawnPos, Quaternion.identity);
+
+            if (isPatrullero)
+            {
+                ConfigurarPatrullero(minoGO);
+            }
+            else
+            {
+                ConfigurarVigia(minoGO);
+            }
+        }
+
+        private void ConfigurarPatrullero(GameObject minoGO)
+        {            
+            MinoPatrulla patrulla = minoGO.AddComponent<MinoPatrulla>();
+            patrulla.graphGrid = graph as GraphGrid;
+        }
+
+        private void ConfigurarVigia(GameObject minoGO)
+        {
+            MinoRotacion rotacion = minoGO.GetComponent<MinoRotacion>();
+            if (rotacion == null) 
+            {
+                minoGO.AddComponent<MinoRotacion>();
+            }
         }
     }
 }
