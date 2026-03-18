@@ -37,9 +37,9 @@ Para ayudar a Teseo en la huida, podrá activar el Hilo de Ariadna, el cual har�
 Este movimiento manual se realiza persiguiendo el puntero del ratón al estar a cierta distancia de Teseo. El jugador puede correr, aumentando la velocidad normal de movimiento.
 
 ## Punto de partida
-Se parte de un proyecto base proporcionado por el profesor y disponible en este repositorio: [Hamelin - Base](https://github.com/narratech/hamelin-base)
+Se parte de un proyecto base proporcionado por el profesor y disponible en este repositorio: [Minotaur - Base](https://github.com/narratech/minotaur-base)
 
-Consiste en un entorno virtual 3D que representa el pueblo de Hamelín, un personaje controlable por el jugador que es el flautista de Hamelín, un perro compañero y un montón de ratas preparadas para controlarse con IA.
+Consiste en un entorno virtual 3D que representa el legendario Laberinto del Minotauro, generado a partir de una descripción en forma de fichero de texto, con un personaje controlable por el jugador que es Teseo y uno o varios minotauros que actúan como enemigos.
 
 El proyecto define una arquitectura basada en comportamientos de dirección.
 
@@ -94,7 +94,41 @@ Ahora los comportamientos:
 -Para la rotación de los vigías, cambiaremos la rotación del minotauro directamente en su comportamiento de dirección, pero sin darle una dirección para que permanezca en el sitio.
 -Para el merodeo de los patrulleros, implementaremos un movimiento que vaya comprobando el grid sobre el que se mueve y tomando decisiones cada vez que cambia de casilla.
 -Para el seguimiento de todos los minotauros, implementaremos un seguimiento básico sin predicción.
--Para el hilo de Ariadna, implementaremos el algoritmo de A* sobre el grid con objetivo en la casilla de salida. Tendremos una opción de calcular con suavizado que puede ser cambiada.
+-Para el hilo de Ariadna, implementaremos el algoritmo de A* en la jerarquía de grafos (clase `Graph` o `GraphGrid`), concretamente en el método virtual `GetPathAstar()`. Según la documentación del proyecto base, este está diseñado para permitir una implementación simplificada del algoritmo A*. Esta versión simplificada consta de una estructura del registro del nodo muy básica (identificador del nodo y coste *f*) ligada a los propios *GameObjects* (baldosas). Como se asume tener la información completa del grafo (costes incluidos) en forma de matriz en memoria, se prescinde de emplear una lista de cierre y solo se utiliza una lista de apertura implementada mediante una estructura de cola de prioridad (`PriorityQueue`).
+
+El pseudocódigo adaptado a esta arquitectura simplificada sería:
+
+```text
+función GetPathAstar(nodo_inicio, nodo_objetivo):
+    abierta = nueva ColaDePrioridad()
+    abierta.Encolar(nodo_inicio, coste_f=Heuristica(nodo_inicio, nodo_objetivo))
+    
+    // Como conocemos el grafo al completo, podemos almacenar 'g' y 'padre' 
+    // en diccionarios, arrays o matrices de manera directa
+    coste_g[nodo_inicio] = 0
+    padre[nodo_inicio] = nulo
+    
+    mientras abierta no este vacia:
+        actual = abierta.Desencolar() // Extrae el nodo con menor coste_f
+        
+        si actual == nodo_objetivo:
+            devolver ReconstruirCamino(padre, nodo_objetivo)
+            
+        para cada vecino en ObtenerVecinos(actual):
+            nuevo_coste_g = coste_g[actual] + costeArista(actual, vecino)
+            
+            // Si el vecino no se ha evaluado aún, o si encontramos un camino más corto hacia él
+            si vecino no esta en coste_g o nuevo_coste_g < coste_g[vecino]:
+                coste_g[vecino] = nuevo_coste_g
+                padre[vecino] = actual
+                
+                coste_f = nuevo_coste_g + Heuristica(vecino, nodo_objetivo)
+                abierta.Encolar(vecino, coste_f) // Se procesará siempre la evaluación de menor coste_f
+                
+    devolver nulo // Sin camino posible
+```
+
+Tendremos una opción de calcular con suavizado que puede ser cambiada desde la interfaz.
 
 ## Implementación
 Las tareas serán realizadas y el esfuerzo será repartido entre los autores, ya que se trabajará siempre en conjunto desde un único ordenador, evitando trabajar en solitario excepto que sea una urgencia. Esto puede no verse reflejado siempre en los commits del repositorio, pero se intentará utilizar la función de coautor siempre que sea posible.
@@ -123,6 +157,11 @@ Nerea y Víctor, autores de la documentación, código y recursos de este trabaj
 Una vez superada con éxito la asignatura se prevé publicar todo en abierto (la documentación con licencia Creative Commons Attribution 4.0 International (CC BY 4.0) y el código con licencia GNU Lesser General Public License 3.0).
 
 ## Referencias
-* Millington, I., & Funge, J. (2009). Artificial Intelligence for Games (2.ª ed.). Morgan Kaufmann. (Documento web recuperado del repositorio de Massachusetts Institute of Technology OpenCourseWare: http://www.matt-versaggi.com/mit_open_courseware/GameAI/ArtificialIntelligenceforGamesSecondEdition.pdf)
-* Peinado, F. (s. f.). Navegación [Diapositivas de la asignatura IAV 2025-2026]. Narratech. https://narratech.com/es/inteligencia-artificial-para-videojuegos/navegacion/
-* Soares de Lima, E. (2018). Game AI - Steering Behaviours [Diapositivas en formato PDF]. Edirlei.com. https://edirlei.com/aulas/game-ai/GAME_AI_Lecture_07_Steering_Behaviours_2018.pdf
+* Lousberg, K. (s. f.). *KayKit - Animations* [Animaciones 3D]. itch.io. Recuperado de https://kaylousberg.itch.io/kaykit-animations
+* Lousberg, K. (s. f.). *KayKit - Dungeon Pack* [Modelos 3D]. itch.io. Recuperado de https://kaylousberg.itch.io/kaykit-dungeon
+* Lousberg, K. (s. f.). *KayKit - Medieval Builder Pack* [Modelos 3D]. itch.io. Recuperado de https://kaylousberg.itch.io/kaykit-medieval-builder-pack
+* Millington, I., & Funge, J. (2009). *Artificial Intelligence for Games* (2.ª ed.). Morgan Kaufmann. Recuperado de http://www.matt-versaggi.com/mit_open_courseware/GameAI/ArtificialIntelligenceforGamesSecondEdition.pdf
+* Peinado, F. (s. f.). *El Secreto del Laberinto* [Práctica de asignatura]. Narratech. Recuperado de https://narratech.com/es/inteligencia-artificial-para-videojuegos/navegacion/el-secreto-del-laberinto/
+* Peinado, F. (s. f.). *Minotaur - Base* [Código fuente]. GitHub. Recuperado de https://github.com/narratech/minotaur-base
+* Peinado, F. (s. f.). *Navegación* [Diapositivas de la asignatura IAV 2025-2026]. Narratech. Recuperado de https://narratech.com/es/inteligencia-artificial-para-videojuegos/navegacion/
+* Soares de Lima, E. (2018). *Game AI - Steering Behaviours* [Diapositivas en formato PDF]. Edirlei.com. Recuperado de https://edirlei.com/aulas/game-ai/GAME_AI_Lecture_07_Steering_Behaviours_2018.pdf
