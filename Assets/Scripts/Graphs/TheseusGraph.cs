@@ -92,6 +92,10 @@ namespace UCM.IAV.Navegacion
                 if (srcObj == null) srcObj = GameManager.instance.GetPlayer();
                 if (dstObj == null) dstObj = GameManager.instance.GetExitNode();
 
+                srcObj.GetComponent<ControlJugador>().enabled = false;
+                srcObj.GetComponent<SeguirCamino>().graph = this;
+                srcObj.GetComponent<SeguirCamino>().enabled = true;
+
                 //path = new List<Vertex>();
 
                 switch (algorithm)
@@ -117,6 +121,12 @@ namespace UCM.IAV.Navegacion
 
                     DibujaHilo();
                 }
+               
+            }
+            else
+            {
+                 srcObj.GetComponent<ControlJugador>().enabled = true;
+                 srcObj.GetComponent<SeguirCamino>().enabled = false;
             }
         }
 
