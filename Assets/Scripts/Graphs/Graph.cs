@@ -10,6 +10,7 @@ namespace UCM.IAV.Navegacion
 {
 
     using UnityEngine;
+    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -33,6 +34,14 @@ namespace UCM.IAV.Navegacion
         // Cuidado al implementarlas, porque no puede ser que la distancia -por ejemplo- entre dos casillas tenga una heurística más cara que el coste real de navegar de una a otra.
         public delegate float Heuristic(Vertex a, Vertex b);
 
+        public float DistanciaEuclidiana(Vertex a, Vertex b) {
+            return Vector3.Distance(a.transform.position, b.transform.position);
+        }
+        public float DistanciaChebyshev(Vertex a, Vertex b) {
+            return Mathf.Max(Mathf.Abs(a.transform.position.x - b.transform.position.x), Mathf.Abs(a.transform.position.z - b.transform.position.z));
+        }
+
+
         // Used for getting path in frames
         public List<Vertex> path;
 
@@ -55,7 +64,29 @@ namespace UCM.IAV.Navegacion
 
         public virtual Vertex GetNearestVertex(Vector3 position)
         {
-            return null;
+            if (ReferenceEquals(vertices, null) || vertices.Count == 0)
+            {
+                Debug.LogWarning("El grafo no tiene vértices cargados.");
+                return null;
+            }
+
+            Vertex nearestVertex = null;
+           
+            float minDistanceSqr = float.MaxValue; 
+
+            foreach (Vertex v in vertices)
+            {
+                Vector3 offset = v.transform.position - position;
+                float distSqr = offset.sqrMagnitude;
+
+                if (distSqr < minDistanceSqr)
+                {
+                    minDistanceSqr = distSqr;
+                    nearestVertex = v;
+                }
+            }
+
+            return nearestVertex;
         }
 
         public virtual GameObject GetRandomPos()
@@ -104,12 +135,58 @@ namespace UCM.IAV.Navegacion
 
         public List<Vertex> GetPathAstar(GameObject srcO, GameObject dstO, Heuristic h = null)
         {
-            // IMPLEMENTAR ALGORITMO A*
-            // Teniendo .NET 6 activo, puedes usar la cola de prioridad que viene por defecto en C# y no necesitas usar BinaryHeap
-            // PriorityQueue <Vertex> open = new PriorityQueue<Vertex>();
+            Vertex start = GetNearestVertex(srcO.transform.position);
+            Vertex goal = GetNearestVertex(dstO.transform.position);
+            if(start == null || goal == null) {
+                print ("ERROR: El nodo de origen o destino no es un vértice del grafo. Asegúrate de que el objeto tiene un componente 'Vertex' y que ese componente está bien configurado.");
+                return new List<Vertex>();   
+            }
+            if (h == null) h = DistanciaEuclidiana;
+
+            BinaryHeap<Vertex> openList = new BinaryHeap<Vertex>();
+            
+            int[] parent = new int[vertices.Count];
+            float[] cost_g = new float[vertices.Count];
+
+            for (int i = 0; i < cost_g.Length; i++) cost_g[i] = float.MaxValue;
+
+            int startId = start.id;
+            cost_g[startId] = 0;
+            start.cost = 0 + h(start, goal); 
+            parent[startId] = -1;
+            
+            openList.Add(start);
+
+            while (openList.Count > 0)
+            {
+                Vertex v = openList.Remove();
+
+                if (v.id == goal.id)
+                    
+                    return BuildPath(start.id, goal.id, ref parent);
+
+                Vertex[] neighbours = GetNeighbours(v);
+                float[] costsV = GetNeighboursCosts(v);
+
+                for (int i = 0; i < neighbours.Length; i++)
+                {
+                    Vertex next = neighbours[i];
+                    float newCostG = cost_g[v.id] + costsV[i];
+
+                    if (newCostG < cost_g[next.id])
+                    {
+                        cost_g[next.id] = newCostG;
+                        parent[next.id] = v.id;
+                        
+                        next.cost = newCostG + h(next, goal); 
+
+                        if (!openList.Contains(next))
+                            openList.Add(next);
+                    }
+                }
+            }
             return new List<Vertex>();
         }
-
         public List<Vertex> Smooth(List<Vertex> inputPath)
         {
             // IMPLEMENTAR SUAVIZADO DE CAMINOS
