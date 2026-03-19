@@ -76,16 +76,11 @@ namespace UCM.IAV.Navegacion
         // Update is called once per frame
         public virtual void Update()
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                if (!ariadna)
-                    updateAriadna(true);
+                updateAriadna(!ariadna);
             }
-            else
-            {
-                if (ariadna)
-                    updateAriadna(false);
-            }
+
 
 
             if (Input.GetKeyDown(KeyCode.S))
@@ -217,6 +212,9 @@ namespace UCM.IAV.Navegacion
         {
             ariadna = ar;
             hilo.enabled = ariadna;
+            ControlJugador controljg = GameManager.instance.GetPlayer().GetComponent<ControlJugador>();
+            controljg.ToggleAriadna();
+
         }
 
         public string ChangeHeuristic()

@@ -30,8 +30,13 @@ namespace UCM.IAV.Movimiento
         [SerializeField]
         private int minAcel;
 
+        private bool controlAriadna = false;
+
         public override Direccion GetDireccion()
         {
+
+            if(controlAriadna) return new Direccion();
+
             Direccion direccion = new Direccion();
             
            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -78,6 +83,11 @@ namespace UCM.IAV.Movimiento
         public void Andar()
         {
             agente.aceleracionMax = minAcel;
+        }
+
+        public void ToggleAriadna()
+        {
+            controlAriadna = !controlAriadna;
         }
     }
 }
