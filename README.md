@@ -128,7 +128,26 @@ función GetPathAstar(nodo_inicio, nodo_objetivo):
     devolver nulo // Sin camino posible
 ```
 
-Tendremos una opción de calcular con suavizado que puede ser cambiada desde la interfaz.
+Tendremos una opción de calcular con suavizado que puede ser cambiada desde la interfaz, alojada en el método `Smooth()` de la clase `Graph`.
+
+Este algoritmo acorta el camino generado por `A*` saltándose nodos cuando hay una trayectoria directa ("línea de visión").
+
+El pseudocódigo sería:
+
+```text
+función Suavizar(camino):
+    nuevo_camino = [camino[0]] // Empezamos por el inicio
+    actual = camino[0]
+    
+    mientras actual no sea el último nodo:
+        // Buscamos el nodo más lejano del camino con visión directa
+        siguiente = nodo de 'camino' más lejano y visible desde 'actual'
+        
+        nuevo_camino.añadir(siguiente)
+        actual = siguiente
+        
+    devolver nuevo_camino
+```
 
 ## Implementación
 Las tareas serán realizadas y el esfuerzo será repartido entre los autores, ya que se trabajará siempre en conjunto desde un único ordenador, evitando trabajar en solitario excepto que sea una urgencia. Esto puede no verse reflejado siempre en los *commits* del repositorio, pero se intentará utilizar la función de coautor siempre que sea posible.
@@ -160,8 +179,11 @@ Una vez superada con éxito la asignatura se prevé publicar todo en abierto (la
 * Lousberg, K. (s. f.). *KayKit - Animations* [Animaciones 3D]. itch.io. Recuperado de https://kaylousberg.itch.io/kaykit-animations
 * Lousberg, K. (s. f.). *KayKit - Dungeon Pack* [Modelos 3D]. itch.io. Recuperado de https://kaylousberg.itch.io/kaykit-dungeon
 * Lousberg, K. (s. f.). *KayKit - Medieval Builder Pack* [Modelos 3D]. itch.io. Recuperado de https://kaylousberg.itch.io/kaykit-medieval-builder-pack
+* Microsoft. (s. f.). *PriorityQueue<TElement,TPriority> Class*. Microsoft Learn. Recuperado de https://learn.microsoft.com/es-es/dotnet/api/system.collections.generic.priorityqueue-2
 * Millington, I., & Funge, J. (2009). *Artificial Intelligence for Games* (2.ª ed.). Morgan Kaufmann. Recuperado de http://www.matt-versaggi.com/mit_open_courseware/GameAI/ArtificialIntelligenceforGamesSecondEdition.pdf
+* Patel, A. (s. f.). *Amit’s A* Pages*. Red Blob Games. Recuperado de http://theory.stanford.edu/~amitp/GameProgramming/
 * Peinado, F. (s. f.). *El Secreto del Laberinto* [Práctica de asignatura]. Narratech. Recuperado de https://narratech.com/es/inteligencia-artificial-para-videojuegos/navegacion/el-secreto-del-laberinto/
 * Peinado, F. (s. f.). *Minotaur - Base* [Código fuente]. GitHub. Recuperado de https://github.com/narratech/minotaur-base
 * Peinado, F. (s. f.). *Navegación* [Diapositivas de la asignatura IAV 2025-2026]. Narratech. Recuperado de https://narratech.com/es/inteligencia-artificial-para-videojuegos/navegacion/
 * Soares de Lima, E. (2018). *Game AI - Steering Behaviours* [Diapositivas en formato PDF]. Edirlei.com. Recuperado de https://edirlei.com/aulas/game-ai/GAME_AI_Lecture_07_Steering_Behaviours_2018.pdf
+* Unity Technologies. (s. f.). *Physics.Raycast*. Unity Documentation. Recuperado de https://docs.unity3d.com/ScriptReference/Physics.Raycast.html
