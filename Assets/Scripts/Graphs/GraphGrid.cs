@@ -1,4 +1,4 @@
-﻿/*    
+/*    
    Copyright (C) 2020-2023 Federico Peinado
    http://www.federicopeinado.com
    Este fichero forma parte del material de la asignatura Inteligencia Artificial para Videojuegos.
@@ -254,21 +254,48 @@ namespace UCM.IAV.Navegacion
         public override void UpdateVertexCost(Vector3 position, float costMultiplier)
         {
             Vertex v = GetNearestVertex(position);
+            if (v == null) return;
 
             Vector2 gridPos = IdToGrid(v.id);
 
             int x = (int) gridPos.y;
             int y = (int) gridPos.x;
 
+            //Vecindad Manhattan de radio 3
+            for (int i = x - 3; i <= x + 3; i++)
+            {
+                for (int j = y - 3; j <= y + 3; j++)
+                {
+                    if (i >= 0 && i < numRows && j >= 0 && j < numCols)
+                    {
 
-            if (x > 0 && x < numRows - 1 && y > 0 && y < numCols - 1)
-                costsVertices[x, y] = defaultCost * costMultiplier * costMultiplier;
+                        if (Mathf.Abs(i - x) + Mathf.Abs(j - y) <= 3)
+                        {
+                            if (mapVertices[i, j])
+                            {
+                                //Si hay un obstáculo entre el minotauro y la celda, no se expande la zona de influencia.
+                                Vector3 tilePos = vertexObjs[GridToId(j, i)].transform.position;
+                                Vector3 startPos = v.transform.position + Vector3.up * 1.5f;
+                                Vector3 dir = (tilePos + Vector3.up * 1.5f) - startPos;
+                                
+                                bool obstaculo = false;
+                                if (Physics.Raycast(startPos, dir.normalized, dir.magnitude, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                                {
+                                    obstaculo = true;
+                                }
 
-            if(x > 0) costsVertices[x - 1, y] = defaultCost * costMultiplier;
-            if(x < numRows - 1) costsVertices[x + 1, y] = defaultCost * costMultiplier;
-            if(y > 0) costsVertices[x, y - 1] = defaultCost * costMultiplier;
-            if(y < numCols - 1) costsVertices[x, y + 1] = defaultCost * costMultiplier;
-
+                                if (!obstaculo)
+                                {
+                                    if (i == x && j == y)
+                                        costsVertices[i, j] = maximumCost;
+                                    else
+                                        costsVertices[i, j] = 5f;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private GameObject WallInstantiate(Vector3 position, int i, int j)
