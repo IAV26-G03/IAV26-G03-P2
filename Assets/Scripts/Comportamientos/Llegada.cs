@@ -1,9 +1,9 @@
-/*    
+Ôªø/*    
    Copyright (C) 2020 Federico Peinado
    http://www.federicopeinado.com
 
    Este fichero forma parte del material de la asignatura Inteligencia Artificial para Videojuegos.
-   Esta asignatura se imparte en la Facultad de Inform·tica de la Universidad Complutense de Madrid (EspaÒa).
+   Esta asignatura se imparte en la Facultad de Inform√°tica de la Universidad Complutense de Madrid (Espa√±a).
 
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
@@ -18,7 +18,7 @@ namespace UCM.IAV.Movimiento
     public class Llegada : ComportamientoAgente
     {
         /// <summary>
-        /// Obtiene la direcciÛn
+        /// Obtiene la direcci√≥n
         /// </summary>
         /// <returns></returns>
         /// 
@@ -53,25 +53,25 @@ namespace UCM.IAV.Movimiento
 
             float targetAccel;
 
-            // M·xima aceleraciÛn desde fuera del radio de frenado
+            // M√°xima aceleraci√≥n desde fuera del radio de frenado
             if (distance > radioRalentizado)
                 targetAccel = agente.aceleracionMax;
-            // AceleraciÛn escalada
+            // Aceleraci√≥n escalada
             else
                 targetAccel = agente.aceleracionMax * distance / (radioRalentizado * fuerzaRalentizado);
 
-            // Velocity combina aceleraciÛn y direcciÛn
+            // Velocity combina aceleraci√≥n y direcci√≥n
             Vector3 targetVelocity = objetivo.transform.position - transform.position;
             targetVelocity.Normalize();
             targetVelocity *= targetAccel;
 
-            // La aceleraciÛn se posiciona al nivel de la del objetivo
+            // La aceleraci√≥n se posiciona al nivel de la del objetivo
             direccion.lineal = targetVelocity - agente.velocidad;
             direccion.lineal /= timeToTarget;
 
-            //direccion.lineal += Avoidance();
+            direccion.lineal += Avoidance();
 
-            // Comprobamos que no se pase de aceleraciÛn
+            // Comprobamos que no se pase de aceleraci√≥n
             if (direccion.lineal.magnitude > agente.aceleracionMax)
             {
                 direccion.lineal.Normalize();
@@ -106,6 +106,10 @@ namespace UCM.IAV.Movimiento
                 //Debug.DrawLine(pos, dir * distance, Color.yellow);
                 return Vector3.zero;
             }
+        }
+        public void SetObjetivo(GameObject nuevoObjetivo)
+        {
+            objetivo = nuevoObjetivo;
         }
 
         Vector3 Avoidance()

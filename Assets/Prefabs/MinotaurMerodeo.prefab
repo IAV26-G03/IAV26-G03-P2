@@ -479,6 +479,11 @@ GameObject:
   - component: {fileID: 4308355810874672084}
   - component: {fileID: 8357271194336293764}
   - component: {fileID: -4257107456688898646}
+  - component: {fileID: 385889610687562904}
+  - component: {fileID: 1705210778828635523}
+  - component: {fileID: 5896658100019645256}
+  - component: {fileID: 6730803224772261592}
+  - component: {fileID: 5710720109780075903}
   m_Layer: 7
   m_Name: MinotaurMerodeo
   m_TagString: Untagged
@@ -625,6 +630,82 @@ MonoBehaviour:
   graphGrid: {fileID: 0}
   tiempoEspera: 1.5
   multiplicadorVelocidad: 0.5
+--- !u!114 &385889610687562904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856985828648263931}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32ae6ecb59bfdb145aa73cf70a7145c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  peso: 1
+  prioridad: 1
+  objetivo: {fileID: 0}
+  radioObjetivo: 0
+  radioRalentizado: 0
+  fuerzaRalentizado: 0
+  avoidQuantity: 5
+  distance: 7
+--- !u!114 &1705210778828635523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856985828648263931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf24d7bc4373ad4e8803d2e3e9ebdf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  llegada: {fileID: 0}
+  player: {fileID: 0}
+  visionAngle: 90
+  visionDistance: 10
+--- !u!114 &5896658100019645256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856985828648263931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 755fd67806b1081458e683e8d1283d33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6730803224772261592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856985828648263931}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13684ffe492191840b7059313990e5a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5710720109780075903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856985828648263931}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ced513ae5c269e4aa20364c475dc698, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  peso: 1
+  prioridad: 1
+  objetivo: {fileID: 0}
+  graph: {fileID: 0}
 --- !u!1 &6227627562668922387
 GameObject:
   m_ObjectHideFlags: 0
