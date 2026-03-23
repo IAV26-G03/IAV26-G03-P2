@@ -1,4 +1,4 @@
-﻿/*    
+/*    
    Copyright (C) 2020-2023 Federico Peinado
    http://www.federicopeinado.com
    Este fichero forma parte del material de la asignatura Inteligencia Artificial para Videojuegos.
@@ -81,52 +81,44 @@ namespace UCM.IAV.Navegacion
                 updateAriadna(!ariadna);
             }
 
-
-
             if (Input.GetKeyDown(KeyCode.S))
+            {
                 smoothPath = !smoothPath;
+                if (ariadna) CalculatePath();
+            }
 
             if (ariadna)
             {
-                //Source jugador y destino el nodo final
-                if (srcObj == null) srcObj = GameManager.instance.GetPlayer();
-                if (dstObj == null) dstObj = GameManager.instance.GetExitNode();
-
-                srcObj.GetComponent<ControlJugador>().enabled = false;
-                srcObj.GetComponent<SeguirCamino>().graph = this;
-                srcObj.GetComponent<SeguirCamino>().enabled = true;
-
-                //path = new List<Vertex>();
-
-                switch (algorithm)
+                if (path != null && path.Count > 0)
                 {
-                    case TesterGraphAlgorithm.ASTAR:
-                        if (firstHeuristic) path = graph.GetPathAstar(srcObj, dstObj, graph.DistanciaEuclidiana); // COMO SEGUNDO ARGUMENTO SE DEBERÍA PASAR LA HEURÍSTICA
-                        else path = graph.GetPathAstar(srcObj, dstObj, graph.DistanciaChebyshev); // COMO SEGUNDO ARGUMENTO SE DEBERÍA PASAR LA HEURÍSTICA
-                        break;
-                    default:
-                    case TesterGraphAlgorithm.BFS:
-                        path = graph.GetPathBFS(srcObj, dstObj);
-                        break;
-                    case TesterGraphAlgorithm.DFS:
-                        path = graph.GetPathDFS(srcObj, dstObj);
-                        break;
+                    Transform nextNode = path[path.Count - 1].transform;
+                    Vector3 posTeseo = srcObj.transform.position;
+                    Vector3 posNodo = nextNode.position;
+                    posTeseo.y = 0; posNodo.y = 0;
+                    
+                    if (Vector3.Distance(posTeseo, posNodo) < 0.5f)
+                    {
+                        path.RemoveAt(path.Count - 1);
+                    }
                 }
-                if (smoothPath)
-                    path = graph.Smooth(path); // Suavizar el camino, una vez calculado
 
-                if (path.Count > 0)
+                if (path != null && path.Count > 0)
                 {
-                    //GameManager.instance.SetPlayerNode(path[path.Count - 1].transform);
-
                     DibujaHilo();
                 }
-               
+                else
+                {
+                    hilo.positionCount = 0;
+                }
             }
             else
             {
-                 srcObj.GetComponent<ControlJugador>().enabled = true;
-                 srcObj.GetComponent<SeguirCamino>().enabled = false;
+                if (srcObj != null)
+                {
+                    srcObj.GetComponent<ControlJugador>().enabled = true;
+                    if (srcObj.GetComponent<SeguirCamino>() != null)
+                        srcObj.GetComponent<SeguirCamino>().enabled = false;
+                }
             }
         }
 
@@ -225,12 +217,45 @@ namespace UCM.IAV.Navegacion
             ControlJugador controljg = GameManager.instance.GetPlayer().GetComponent<ControlJugador>();
             controljg.ToggleAriadna();
 
+            if (ariadna)
+            {
+                if (srcObj == null) srcObj = GameManager.instance.GetPlayer();
+                if (dstObj == null) dstObj = GameManager.instance.GetExitNode();
+
+                srcObj.GetComponent<ControlJugador>().enabled = false;
+                srcObj.GetComponent<SeguirCamino>().graph = this;
+                srcObj.GetComponent<SeguirCamino>().enabled = true;
+
+                CalculatePath();
+            }
+        }
+
+        private void CalculatePath()
+        {
+            if (srcObj == null || dstObj == null) return;
+
+            switch (algorithm)
+            {
+                case TesterGraphAlgorithm.ASTAR:
+                    if (firstHeuristic) path = graph.GetPathAstar(srcObj, dstObj, graph.DistanciaEuclidiana);
+                    else path = graph.GetPathAstar(srcObj, dstObj, graph.DistanciaChebyshev);
+                    break;
+                case TesterGraphAlgorithm.BFS:
+                    path = graph.GetPathBFS(srcObj, dstObj);
+                    break;
+                case TesterGraphAlgorithm.DFS:
+                    path = graph.GetPathDFS(srcObj, dstObj);
+                    break;
+            }
+            if (smoothPath)
+                path = graph.Smooth(path);
         }
 
         public string ChangeHeuristic()
         {
             // Está preparado para tener 2 heurísticas diferentes
             firstHeuristic = !firstHeuristic;
+            if (ariadna) CalculatePath();
             return firstHeuristic ? "Euclediana" : "Chebyshev";
         }
 
