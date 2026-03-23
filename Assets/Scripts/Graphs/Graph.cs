@@ -1,4 +1,4 @@
-﻿/*    
+/*    
    Copyright (C) 2020-2023 Federico Peinado
    http://www.federicopeinado.com
    Este fichero forma parte del material de la asignatura Inteligencia Artificial para Videojuegos.
@@ -189,9 +189,36 @@ namespace UCM.IAV.Navegacion
         }
         public List<Vertex> Smooth(List<Vertex> inputPath)
         {
-            // IMPLEMENTAR SUAVIZADO DE CAMINOS
+            if (inputPath == null || inputPath.Count <= 2)
+                return inputPath;
 
             List<Vertex> outputPath = new List<Vertex>();
+            outputPath.Add(inputPath[0]);
+
+            int actualIndex = 0;
+
+            while (actualIndex < inputPath.Count - 1)
+            {
+                int farthestVisibleIndex = actualIndex + 1;
+
+                //Buscar el nodo más lejano del camino con visión directa
+                for (int i = inputPath.Count - 1; i > actualIndex + 1; i--)
+                {
+                    Vector3 origen = inputPath[actualIndex].transform.position + Vector3.up * 1.5f;
+                    Vector3 destino = inputPath[i].transform.position + Vector3.up * 1.5f;
+                    Vector3 dir = destino - origen;
+
+                    //Comprobar si hay obstáculos en línea recta.
+                    if (!Physics.Raycast(origen, dir.normalized, dir.magnitude - 0.1f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                    {
+                        farthestVisibleIndex = i;
+                        break;
+                    }
+                }
+
+                outputPath.Add(inputPath[farthestVisibleIndex]);
+                actualIndex = farthestVisibleIndex;
+            }
 
             return outputPath; 
         }
