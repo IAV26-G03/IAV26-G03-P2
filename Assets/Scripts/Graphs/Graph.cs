@@ -19,6 +19,12 @@ namespace UCM.IAV.Navegacion
     /// </summary>
     public abstract class Graph : MonoBehaviour
     {
+        // Métricas A*
+        public int nodosIterados = 0;
+        public int nodosVisitados = 0;
+        public float costeCamino = 0f;
+        public float duracionAstarMS = 0f;
+
         // Aquí el grafo entero es representado con estas listas, que luego puede aprovechar el algoritmo A*.
         // El pseudocódigo de Millington no asume que tengamos toda la información del grafo representada y por eso va guardando registros de los nodos que visita... pero si nos es posible, OPCIONALMENTE podemos usar estas variables como una CACHÉ donde tener toda la información
         public GameObject vertexPrefab;
@@ -135,6 +141,14 @@ namespace UCM.IAV.Navegacion
 
         public List<Vertex> GetPathAstar(GameObject srcO, GameObject dstO, Heuristic h = null)
         {
+            nodosIterados = 0;
+            nodosVisitados = 0;
+            costeCamino = 0f;
+            duracionAstarMS = 0f;
+
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+
             Vertex start = GetNearestVertex(srcO.transform.position);
             Vertex goal = GetNearestVertex(dstO.transform.position);
             if(start == null || goal == null) {
@@ -156,14 +170,20 @@ namespace UCM.IAV.Navegacion
             parent[startId] = -1;
             
             openList.Add(start);
+            nodosVisitados++;
 
             while (openList.Count > 0)
             {
                 Vertex v = openList.Remove();
+                nodosIterados++;
 
                 if (v.id == goal.id)
-                    
+                {
+                    costeCamino = cost_g[goal.id];
+                    sw.Stop();
+                    duracionAstarMS = (float)sw.Elapsed.TotalMilliseconds;
                     return BuildPath(start.id, goal.id, ref parent);
+                }
 
                 Vertex[] neighbours = GetNeighbours(v);
                 float[] costsV = GetNeighboursCosts(v);
@@ -175,16 +195,23 @@ namespace UCM.IAV.Navegacion
 
                     if (newCostG < cost_g[next.id])
                     {
+                        bool isNew = (cost_g[next.id] == float.MaxValue);
+                        
                         cost_g[next.id] = newCostG;
                         parent[next.id] = v.id;
                         
                         next.cost = newCostG + h(next, goal); 
 
                         if (!openList.Contains(next))
+                        {
                             openList.Add(next);
+                            if (isNew) nodosVisitados++;
+                        }
                     }
                 }
             }
+            sw.Stop();
+            duracionAstarMS = (float)sw.Elapsed.TotalMilliseconds;
             return new List<Vertex>();
         }
         public List<Vertex> Smooth(List<Vertex> inputPath)

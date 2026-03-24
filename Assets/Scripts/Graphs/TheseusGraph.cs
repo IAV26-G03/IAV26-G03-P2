@@ -264,5 +264,35 @@ namespace UCM.IAV.Navegacion
             path = null;
         }
 
+        void OnGUI()
+        {
+            if (!ariadna) return;
+
+            if (graph != null && path != null)
+            {
+                int mapSize = graph.GetSize();
+                float frameMs = Application.targetFrameRate > 0 ? (1000f / Application.targetFrameRate) : 16.666f;
+                float framePercentage = (graph.duracionAstarMS / frameMs) * 100f;
+                
+                string metrics = $"[ MÉTRICAS DEL A* ]\n" +
+                                 $"- Tamaño del entorno: {mapSize} baldosas\n" +
+                                 $"- Nodos iterados (cerrada): {graph.nodosIterados}\n" +
+                                 $"- Nodos visitados (abierta): {graph.nodosVisitados}\n" +
+                                 $"- Longitud restante: {path.Count} baldosas/wayp.\n" +
+                                 $"- Coste total calculado: {graph.costeCamino:F1}\n" +
+                                 $"- Tiempo A*: {graph.duracionAstarMS:F4} ms\n" +
+                                 $"- % de un fotograma consumido: {framePercentage:F2}%";
+                                 
+                GUIStyle style = new GUIStyle(GUI.skin.label);
+                style.fontSize = 14;
+                style.normal.textColor = Color.white;
+                style.fontStyle = FontStyle.Bold;
+                
+                GUI.color = new Color(0, 0, 0, 0.8f);
+                GUI.Box(new Rect(10, 180, 360, 160), "");
+                GUI.color = Color.white;
+                GUI.Label(new Rect(20, 190, 340, 150), metrics, style);
+            }
+        }
     }
 }
