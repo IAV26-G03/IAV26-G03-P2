@@ -6,31 +6,60 @@ public class VisionCone : MonoBehaviour
     public Llegada llegada;
     public Transform player;
 
-    public float visionAngle = 90f;
-    public float visionDistance = 30f;
+    [SerializeField] private MinoRotacion rotacion;
+    [SerializeField] private MinoPatrulla patrulla;
 
-    void Awake()
+    [SerializeField] private float visionAngle = 30f;
+    [SerializeField] private float visionDistance = 5f;
+
+    private void Awake()
     {
         if (player == null && GameManager.instance != null)
             player = GameManager.instance.GetPlayer().transform;
 
         if (llegada == null)
             llegada = GetComponent<Llegada>();
+
+        // Serializamos rotacion/patrulla: si tienes uno de los dos, se asigna automáticamente
+        if (rotacion == null)
+            rotacion = GetComponent<MinoRotacion>();
+        if (patrulla == null)
+            patrulla = GetComponent<MinoPatrulla>();
     }
 
     void Update()
     {
-        if (player == null || llegada == null) return; 
+        if (player == null || llegada == null) return;
 
+        bool veJugador = PuedeVerJugador(); // Llama a tu función y guarda el resultado
 
+        // Debug rápido
+        if (veJugador)
+        {
+            Debug.Log($"{name} ve al jugador");
+        }
+        else
+        {
+            Debug.Log($"{name} NO ve al jugador");
+        }
         if (PuedeVerJugador())
         {
             llegada.SetObjetivo(player.gameObject);
             llegada.enabled = true;
+
+            if (rotacion != null)
+                rotacion.enabled = false;
+            if (patrulla != null)
+                patrulla.enabled = false;
         }
         else
         {
             llegada.enabled = false;
+
+            if (rotacion != null)
+                rotacion.enabled = true;
+            if (patrulla != null)
+                patrulla.enabled = true;
         }
     }
 

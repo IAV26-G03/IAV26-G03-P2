@@ -593,7 +593,7 @@ MonoBehaviour:
   combinarPorPeso: 0
   combinarPorPrioridad: 0
   umbralPrioridad: 0.2
-  velocidadMax: 15
+  velocidadMax: 5
   rotacionMax: 5
   aceleracionMax: 7
   aceleracionAngularMax: 5
@@ -664,8 +664,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   llegada: {fileID: 0}
   player: {fileID: 0}
-  visionAngle: 90
-  visionDistance: 10
+  rotacion: {fileID: 0}
+  patrulla: {fileID: 0}
+  visionAngle: 30
+  visionDistance: 5
 --- !u!114 &5896658100019645256
 MonoBehaviour:
   m_ObjectHideFlags: 0
