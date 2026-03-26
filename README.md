@@ -8,7 +8,7 @@
 - Víctor Valenzuela Martínez - imVictorVM(https://github.com/imVictorVM)
 
 ## Vídeo con las pruebas:
-Enlace al vídeo con las pruebas realizadas:
+Enlace al vídeo con las pruebas realizadas: https://youtu.be/qTwEzorPeAA
 
 ## Resumen
 Se trata de un prototipo básico de un juego que simula el legendario **Laberinto del Minotauro**, donde el jugador controla a **Teseo** y el resto de entidades, los **minotauros**, actúan con inteligencia artificial.
@@ -193,8 +193,7 @@ Para el apartado E -
 Se puede observar que al activar el *hilo de Ariadna*, *Teseo* empieza a seguir el hilo automáticamente, y deja de hacer caso al puntero del ratón. Esto se desactiva al desactivar el *hilo de Ariadna*, lo cual le devuelve al usuario el control de *Teseo* mediante el puntero del ratón.
 
 ## Conclusiones
-...
-
+Se puede observar la considerable reducción de esferas en el editor cuando se realiza el suavizado lo que implica un menor numero de baldosas que se recorren en el build.
 ## Licencia
 Nerea y Víctor, autores de la documentación, código y recursos de este trabajo, concedemos permiso permanente a los profesores de la Facultad de Informática de la Universidad Complutense de Madrid para utilizar nuestro material, con sus comentarios y evaluaciones, con fines educativos o de investigación; ya sea para obtener datos agregados de forma anónima como para utilizarlo total o parcialmente reconociendo expresamente nuestra autoría.
 
