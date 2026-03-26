@@ -1,5 +1,7 @@
 # Inteligencia Artificial para Videojuegos - Práctica 2: El Secreto del Laberinto
 
+>[!NOTE]
+>Se han realizado cambios En la documentación a fecha de 26/03/2026.
 
 ## Autores
 - Nerea Espinosa Calatayud - nebbber(https://github.com/nebbber)
@@ -157,15 +159,38 @@ El flujo de trabajo ha sido el siguiente:
 El día 5 de marzo se comenzó la práctica y realizamos el apartado **A**, teniendo ya implementado el movimiento de **Teseo** con el puntero del ratón y correr con el **clic izquierdo**. 
 Empezamos el apartado **B**, sin mucho éxito.
 La semana del 9 de marzo, conseguimos hacer las rotaciones de los *vigías* y el merodeo de los *patrulleros*, y realizamos cambios significativos en la documentación para preparar la entrega.
+La semana del 16 de marzo acabamos la documentación, y empezamos a programar el algoritmo de *A** y el movimiento automático al activar el **hilo de Ariadna**.
+La semana del 23 de marzo acabamos la implementación del seguimiento añadiendo el *suavizado* al algoritmo de búsqueda de caminos.
+También añadimos el seguimiento de los minotauros al entrar en su **cono de visión**.
+Repasamos todo para que funcione correctamente y añadimos las **métricas** del algoritmo *A**.
 ...
 
 ## Ampliaciones
 
-De momento, no se han realizado ampliaciones.
+No hemos realizado ampliaciones.
 
 
 ## Pruebas y métricas
-Todavía no se han realizado pruebas.
+
+Las pruebas realizadas son:
+Para el apartado A -
+Se puede observar que el jugador persigue el puntero del ratón y se mueve en esa dirección si la distancia es mayor a un umbral.
+Se puede observar como comienza a correr al pulsar el click izquierdo. 
+
+Para el apartado B -
+Se pueden observar dos tipos de enemigos, uno que está siempre estático, rotando sobre si mismo (el llamado *vigía*), y otro que camina por el laberinto en línea recta, pudiendo cambiar de dirección en los cruces (el llamado *patrullero*).
+Se puede observar que al entrar en el campo de visión de ambos, comenzarán a perseguir al jugador hasta perderlo de vista. 
+Se observa una zona de influencia que ralentiza al jugador al entrar en ella.
+
+Para el apartado C -
+Se puede observar que al pulsar el click derecho se activa el algoritmo de *A** (el llamado *hilo de Ariadna*), que se muestra en el juego mediante una línea. Si observamos el editor, las baldosas seleccionadas por el algoritmo se muestran con una esfera blanca. Datos de interés como el tiempo gastado en el algoritmo, los nodos abiertos y cerrados y las baldosas faltantes se pueden apreciar al activar el *hilo de Ariadna*.
+También se puede cambiar la heurística con la que se calcula el algoritmo con la letra *C*, y se observa el cambio al instante.
+
+Para el apartado D - 
+Se puede observar que al presionar la tecla S se activa el suavizado en el cálculo de *A**, lo cual reduce las baldosas elegidas del camino original. Esto se aprecia en el editor pues se reducen las esferas, y en el juego puede verse reflejado al cambiar algún camino por una diagonal.
+
+Para el apartado E -
+Se puede observar que al activar el *hilo de Ariadna*, *Teseo* empieza a seguir el hilo automáticamente, y deja de hacer caso al puntero del ratón. Esto se desactiva al desactivar el *hilo de Ariadna*, lo cual le devuelve al usuario el control de *Teseo* mediante el puntero del ratón.
 
 ## Conclusiones
 ...
